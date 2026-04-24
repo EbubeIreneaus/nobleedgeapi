@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verify Email</title>
+</head>
+<body style="margin:0;padding:0;background-color:#07090F;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;-webkit-font-smoothing:antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#07090F;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <!-- Card -->
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#0E1525;border:1px solid #1E293B;border-radius:16px;overflow:hidden;">
+          <!-- HEADER -->
+          <tr>
+            <td style="background-color:#0A0F1D;padding:36px 40px 30px;text-align:center;border-bottom:2px solid #3B82F6;">
+              <p style="margin:0 0 16px 0;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#3B82F6;">{{ project_name }}</p>
+              <p style="display:inline-block;margin:0 0 16px 0;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3B82F6;background-color:#172554;border:1px solid #1E3A8A;padding:6px 16px;border-radius:100px;">Verification Required</p>
+              <p style="margin:8px 0 0 0;font-size:24px;font-weight:700;color:#FFFFFF;line-height:1.3;">Secure Your <span style="color:#3B82F6;">Account</span></p>
+            </td>
+          </tr>
+          <!-- CONTENT -->
+          <tr>
+            <td style="padding:36px 40px;">
+              <p style="margin:0 0 24px 0;font-size:16px;color:#C9D4E8;line-height:1.6;">
+                Hello <strong style="color:#FFFFFF;">{{ name }}</strong>,<br><br>
+                Thank you for registering. To ensure the security of your {{ project_name }} account and to enjoy unhindered access to our platform features, please verify your email address.
+              </p>
+              <!-- Info block -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
+                <tr>
+                  <td style="background-color:#12192A;border-left:3px solid #3B82F6;border-radius:0 8px 8px 0;padding:14px 18px;">
+                    <p style="margin:0;font-size:13px;color:#94A3B8;line-height:1.6;"><strong style="color:#E2E8F0;">Action Required:</strong> Click the button below to instantly verify your email address. If you did not create this account, you may safely ignore this message.</p>
+                  </td>
+                </tr>
+              </table>
+              <!-- CTA -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
+                <tr>
+                  <td align="center">
+                    <a href="{{ link }}" style="display:inline-block;background-color:#3B82F6;color:#FFF;font-size:14px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;padding:14px 36px;border-radius:8px;text-decoration:none;">Verify Email Address</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- FOOTER -->
+          <tr>
+            <td style="padding:24px 40px;border-top:1px solid #1A2235;text-align:center;background-color:#090D18;">
+              <p style="margin:0;font-size:12px;color:#4A5A74;line-height:1.7;">
+                This is an automated notification from <strong style="color:#6B7A99;">{{ project_name }}</strong>.<br>
+                &copy; 2026 {{ project_name }}. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

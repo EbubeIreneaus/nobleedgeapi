@@ -1,0 +1,79 @@
+{
+  "plans": [
+    {
+      "name": "Starter",
+      "slug": "starter",
+      "description": "Perfect entry-level plan for new investors",
+      "min_amount": 50,
+      "max_amount": 499,
+      "roi_percent": 50,
+      "roi_cycle": "daily",
+      "duration_days": 7,
+      "capital_returned": true,
+      "color": "#4CAF50",
+      "features": [
+        "50% daily ROI",
+        "7-day duration",
+        "Capital returned",
+        "Min $50 deposit"
+      ]
+    },
+    {
+      "name": "Standard",
+      "slug": "standard",
+      "description": "Balanced plan with solid returns",
+      "min_amount": 500,
+      "max_amount": 1999,
+      "roi_percent": 75,
+      "roi_cycle": "daily",
+      "duration_days": 14,
+      "capital_returned": true,
+      "color": "#9E9E9E",
+      "features": [
+        "75% daily ROI",
+        "14-day duration",
+        "Capital returned",
+        "Min $500 deposit"
+      ]
+    },
+    {
+      "name": "Professional",
+      "slug": "professional",
+      "description": "High-yield plan for serious investors",
+      "min_amount": 2000,
+      "max_amount": 9999,
+      "roi_percent": 85,
+      "roi_cycle": "daily",
+      "duration_days": 21,
+      "capital_returned": true,
+      "color": "#FFD700",
+      "features": [
+        "85% daily ROI",
+        "21-day duration",
+        "Capital returned",
+        "Priority support",
+        "Min $2,000 deposit"
+      ]
+    },
+    {
+      "name": "VIP",
+      "slug": "vip",
+      "description": "Elite plan with maximum returns",
+      "min_amount": 10000,
+      "max_amount": null,
+      "roi_percent": 95,
+      "roi_cycle": "daily",
+      "duration_days": 30,
+      "capital_returned": true,
+      "color": "#00BCD4",
+      "features": [
+        "95% daily ROI",
+        "30-day duration",
+        "Capital returned",
+        "VIP support",
+        "Personal account manager",
+        "Min $10,000 deposit"
+      ]
+    }
+  ]
+}

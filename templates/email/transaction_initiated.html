@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Transaction Initiated</title>
+</head>
+<body style="margin:0;padding:0;background-color:#07090F;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;-webkit-font-smoothing:antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#07090F;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <!-- Card -->
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#0E1525;border:1px solid #1E293B;border-radius:16px;overflow:hidden;">
+          <!-- HEADER -->
+          <tr>
+            <td style="background-color:#0A0F1D;padding:36px 40px 30px;text-align:center;border-bottom:2px solid #3B82F6;">
+              <p style="margin:0 0 16px 0;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#3B82F6;">{{ project_name }}</p>
+              <p style="display:inline-block;margin:0 0 16px 0;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3B82F6;background-color:#172554;border:1px solid #1E3A8A;padding:6px 16px;border-radius:100px;">Transaction Initiated</p>
+              <p style="margin:8px 0 0 0;font-size:24px;font-weight:700;color:#FFFFFF;line-height:1.3;">Your {{ tx_type }} request<br><span style="color:#3B82F6;">has been registered</span></p>
+            </td>
+          </tr>
+          <!-- CONTENT -->
+          <tr>
+            <td style="padding:36px 40px;">
+              <p style="margin:0 0 24px 0;font-size:16px;color:#C9D4E8;line-height:1.6;">
+                Hello <strong style="color:#FFFFFF;">{{ name }}</strong>,<br><br>
+                We have received your <strong style="color:#FFFFFF;">{{ tx_type }}</strong> request. The transaction is currently being processed and will undergo review by our administrating team shortly.
+              </p>
+              <!-- Amount block -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#020617;border:1px solid #1E293B;border-radius:12px;margin-bottom:28px;">
+                <tr>
+                  <td style="padding:28px;text-align:center;">
+                    <p style="margin:0 0 8px 0;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#8A9BB8;">Transaction Amount</p>
+                    <p style="margin:0;font-size:40px;font-weight:800;color:#FFFFFF;letter-spacing:-1px;line-height:1.1;"><span style="font-size:24px;color:#3B82F6;vertical-align:super;">$</span>{{ amount }}</p>
+                    <p style="margin:6px 0 0 0;font-size:13px;color:#6B7A99;letter-spacing:1px;text-transform:uppercase;">{{ currency }}</p>
+                  </td>
+                </tr>
+              </table>
+              <!-- Detail rows -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
+                <tr>
+                  <td style="padding:12px 0;font-size:14px;color:#8A9BB8;font-weight:500;width:45%;border-bottom:1px solid #1A2235;">Action</td>
+                  <td style="padding:12px 0;font-size:14px;color:#E2E8F0;font-weight:600;text-align:right;border-bottom:1px solid #1A2235;text-transform:capitalize;">{{ tx_type }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 0;font-size:14px;color:#8A9BB8;font-weight:500;border-bottom:1px solid #1A2235;">Reference ID</td>
+                  <td style="padding:12px 0;font-size:12px;color:#94A3B8;text-align:right;font-family:monospace;border-bottom:1px solid #1A2235;">{{ reference }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 0;font-size:14px;color:#8A9BB8;font-weight:500;border-bottom:1px solid #1A2235;">Status</td>
+                  <td style="padding:12px 0;text-align:right;border-bottom:1px solid #1A2235;">
+                    <span style="display:inline-block;background-color:#172554;border:1px solid #1E3A8A;color:#3B82F6;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:100px;">{{ status }}</span>
+                  </td>
+                </tr>
+                {% if note %}
+                <tr>
+                  <td style="padding:12px 0;font-size:14px;color:#8A9BB8;font-weight:500;">Notice</td>
+                  <td style="padding:12px 0;font-size:13px;color:#E2E8F0;text-align:right;">{{ note }}</td>
+                </tr>
+                {% endif %}
+              </table>
+              <!-- CTA -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
+                <tr>
+                  <td align="center">
+                    <a href="{{ dashboard_url }}" style="display:inline-block;background-color:#3B82F6;color:#FFF;font-size:14px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;padding:14px 36px;border-radius:8px;text-decoration:none;">View Dashboard</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- FOOTER -->
+          <tr>
+            <td style="padding:24px 40px;border-top:1px solid #1A2235;text-align:center;background-color:#090D18;">
+              <p style="margin:0;font-size:12px;color:#4A5A74;line-height:1.7;">
+                This is an automated notification from <strong style="color:#6B7A99;">{{ project_name }}</strong>.<br>
+                &copy; 2026 {{ project_name }}. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

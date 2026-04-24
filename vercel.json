@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "uv run alembic upgrade head",
+  "routes": [
+    { "src": "/(.*)", "dest": "api/index.py" }
+  ]
+}
