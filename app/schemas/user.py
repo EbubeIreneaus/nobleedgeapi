@@ -13,6 +13,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
+    phone: str = Field(..., min_length=5, max_length=50)
     referral_code: str | None = None
 
 class UserUpdate(BaseModel):

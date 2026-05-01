@@ -31,6 +31,7 @@ async def register_user(db: AsyncSession, user_in: Register) -> User:
         email=user_in.email,
         username=user_in.username,
         full_name=user_in.full_name,
+        phone=user_in.phone,
         password_hash=get_password_hash(user_in.password),
         referral_code=generate_referral_code(),
         referred_by_id=referred_by_id,

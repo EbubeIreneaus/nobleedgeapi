@@ -123,6 +123,14 @@ async def approve_withdrawal(id: UUID, background_tasks: BackgroundTasks, curren
     txn.status = TransactionStatus.completed
     txn.reviewed_by_id = current_user.id
     txn.reviewed_at = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    # Deduct from available balance and increase total_withdrawn
+    wallet_q = await db.execute(select(Wallet).where(Wallet.user_id == txn.user_id))
+    wallet = wallet_q.scalars().first()
+    if wallet:
+        wallet.balance -= txn.amount
+        wallet.total_withdrawn += txn.amount
+
     await db.commit()
 
     user_q = await db.execute(select(User).where(User.id == txn.user_id))
@@ -148,12 +156,7 @@ async def reject_withdrawal(id: UUID, admin_note: str = Query(None), current_use
     if not txn or txn.status != TransactionStatus.pending:
         raise HTTPException(status_code=400, detail="Invalid or non-pending withdrawal")
 
-    # Refund balance
-    wallet_q = await db.execute(select(Wallet).where(Wallet.user_id == txn.user_id))
-    wallet = wallet_q.scalars().first()
-    if wallet:
-        wallet.balance += txn.amount
-        wallet.total_withdrawn -= txn.amount
+    # We no longer refund balance here because it is not deducted until approval.
 
     txn.status = TransactionStatus.rejected
     txn.admin_note = admin_note
