@@ -6,7 +6,6 @@ from app.models.investment import Investment
 from app.models.referral import Referral
 from app.models.session import UserSession
 from app.models.notification import Notification
-from app.models.settings import Setting
 
 __all__ = [
     "User",
@@ -16,6 +15,5 @@ __all__ = [
     "Investment",
     "Referral",
     "UserSession",
-    "Notification",
-    "Setting"
+    "Notification"
 ]

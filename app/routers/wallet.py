@@ -12,7 +12,6 @@ from app.dependencies import get_db, get_current_active_user
 from app.config import settings
 from app.utils.enums import TransactionType, TransactionStatus
 from app.services.email_service import send_transaction_initiated_email
-from app.models.settings import Setting
 
 router = APIRouter()
 
@@ -49,20 +48,14 @@ async def get_wallet(current_user: User = Depends(get_current_active_user), db: 
     }
 
 @router.get("/deposit/addresses")
-async def get_deposit_addresses(current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_db)):
-    # Helper to get setting or fallback
-    async def get_val(key: str, default: str) -> str:
-        res = await db.execute(select(Setting).where(Setting.key == key))
-        s = res.scalars().first()
-        return s.value if s else default
-
+async def get_deposit_addresses():
     return {
         "success": True,
         "data": {
-            "BTC": await get_val("btc_deposit_address", settings.BTC_WALLET),
-            "USDT_TRC20": await get_val("usdt_trc20_deposit_address", settings.USDT_TRC20_WALLET),
-            "USDT_ERC20": await get_val("usdt_erc20_deposit_address", settings.USDT_ERC20_WALLET),
-            "ETH": await get_val("eth_deposit_address", settings.ETH_WALLET),
+            "BTC": settings.BTC_WALLET,
+            "USDT_TRC20": settings.USDT_TRC20_WALLET,
+            "USDT_ERC20": settings.USDT_ERC20_WALLET,
+            "ETH": settings.ETH_WALLET
         }
     }
 
@@ -105,21 +98,15 @@ async def submit_withdrawal(
     if not network:
         raise HTTPException(status_code=400, detail="Withdrawal network is required")
 
-    # Check pending withdrawals
-    pending_q = await db.execute(select(Transaction).where(
-        Transaction.user_id == current_user.id,
-        Transaction.type == TransactionType.withdrawal,
-        Transaction.status == TransactionStatus.pending
-    ))
-    pending_amount = sum(t.amount for t in pending_q.scalars().all())
+    # Check balance
+    wallet_q = await db.execute(select(Wallet).where(Wallet.user_id == current_user.id))
+    wallet = wallet_q.scalars().first()
+    if not wallet or wallet.balance < amount:
+        raise HTTPException(status_code=400, detail="Insufficient wallet balance")
 
-    # Calculate true available balance
-    # available = balance - pending_amount
-    if wallet.balance - pending_amount < amount:
-        raise HTTPException(status_code=400, detail="Insufficient wallet balance (check your pending withdrawals)")
-
-    # We NO LONGER deduct balance or increase total_withdrawn here.
-    # This will be done in the admin approve_withdrawal endpoint.
+    # Deduct balance immediately (hold)
+    wallet.balance -= amount
+    wallet.total_withdrawn += amount
 
     # Create pending withdrawal transaction
     txn = Transaction(

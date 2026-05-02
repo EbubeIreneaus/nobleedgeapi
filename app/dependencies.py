@@ -66,24 +66,13 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     #     raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-async def get_current_admin_user(current_user: User = Depends(get_current_active_user)) -> User:
-    role_val = current_user.role.value if hasattr(current_user.role, "value") else current_user.role
-    
-    with open("debug.txt", "a") as f:
-        f.write(f"DEBUG: user email={current_user.email}, role={current_user.role}, role_val={role_val}, type(role_val)={type(role_val)}\n")
-        
-    if role_val not in ["admin", "superadmin"]:
-        with open("debug.txt", "a") as f:
-            f.write(f"DEBUG: role_val not in list. Raising 403.\n")
-        raise HTTPException(status_code=403, detail=f"Not enough permissions: user={current_user.email}, role={role_val}")
+async def require_admin(current_user: User = Depends(get_current_active_user)) -> User:
+    if current_user.role not in [UserRole.admin, UserRole.superadmin]:
+        raise HTTPException(status_code=403, detail="Not enough permissions")
     return current_user
 
-require_admin = get_current_admin_user
-
-
 async def require_superadmin(current_user: User = Depends(get_current_active_user)) -> User:
-    role_val = current_user.role.value if hasattr(current_user.role, "value") else current_user.role
-    if role_val != "superadmin":
+    if current_user.role != UserRole.superadmin:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     return current_user
 
