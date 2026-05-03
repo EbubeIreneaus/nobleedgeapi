@@ -2,6 +2,7 @@ from datetime import datetime, timezone, timedelta
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import func
 from fastapi import HTTPException, status
 from app.models.user import User
 from app.models.wallet import Wallet
@@ -16,7 +17,10 @@ def generate_referral_code() -> str:
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
 
 async def register_user(db: AsyncSession, user_in: Register) -> User:
-    query = await db.execute(select(User).where((User.email == user_in.email) | (User.username == user_in.username)))
+    query = await db.execute(select(User).where(
+        (func.lower(User.email) == user_in.email.lower()) | 
+        (func.lower(User.username) == user_in.username.lower())
+    ))
     if query.scalars().first():
         raise HTTPException(status_code=400, detail="Email or username already registered")
 
@@ -32,6 +36,7 @@ async def register_user(db: AsyncSession, user_in: Register) -> User:
         username=user_in.username,
         full_name=user_in.full_name,
         password_hash=get_password_hash(user_in.password),
+        phone=user_in.phone,
         referral_code=generate_referral_code(),
         referred_by_id=referred_by_id,
         email_verification_token=str(uuid.uuid4())
@@ -49,7 +54,7 @@ async def register_user(db: AsyncSession, user_in: Register) -> User:
     return new_user
 
 async def authenticate_user(db: AsyncSession, login_data: Login, ip_address: str | None = None, user_agent: str | None = None) -> tuple[str, str]:
-    query = await db.execute(select(User).where(User.email == login_data.email))
+    query = await db.execute(select(User).where(func.lower(User.email) == login_data.email.lower()))
     user = query.scalars().first()
     if not user or not verify_password(login_data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Incorrect email or password")

@@ -19,6 +19,7 @@ class Register(BaseModel):
     username: str = Field(..., min_length=3, max_length=50)
     full_name: str = Field(..., min_length=2, max_length=100)
     password: str = Field(..., min_length=8)
+    phone: str
     referral_code: str | None = None
 
 class PasswordResetRequest(BaseModel):

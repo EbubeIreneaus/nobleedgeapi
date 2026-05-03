@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.database import get_db
+
 from app.models.settings import Setting
 from app.schemas.settings import SettingUpdate, SettingResponse
-from app.dependencies import get_current_admin_user
+from app.dependencies import get_db, require_admin
 from app.models.user import User
 
 router = APIRouter()
@@ -25,7 +25,7 @@ async def get_whatsapp_number(db: AsyncSession = Depends(get_db)):
 async def update_whatsapp_number(
     setting_in: SettingUpdate,
     db: AsyncSession = Depends(get_db),
-    admin: User = Depends(get_current_admin_user)
+    admin: User = Depends(require_admin)
 ):
     result = await db.execute(select(Setting).where(Setting.key == "whatsapp_number"))
     setting = result.scalars().first()
@@ -62,7 +62,7 @@ async def get_deposit_addresses(db: AsyncSession = Depends(get_db)):
 async def update_deposit_addresses(
     data: DepositAddressesUpdate,
     db: AsyncSession = Depends(get_db),
-    admin: User = Depends(get_current_admin_user)
+    admin: User = Depends(require_admin)
 ):
     async def set_val(key: str, value: str):
         res = await db.execute(select(Setting).where(Setting.key == key))
