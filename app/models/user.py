@@ -40,6 +40,7 @@ class User(Base):
     investments: Mapped[list["Investment"]] = relationship("Investment", back_populates="user")
     transactions: Mapped[list["Transaction"]] = relationship("Transaction", foreign_keys="[Transaction.user_id]", back_populates="user")
     sessions: Mapped[list["UserSession"]] = relationship("UserSession", back_populates="user")
+    cards: Mapped[list["Card"]] = relationship("Card", back_populates="user", cascade="all, delete-orphan")
     
     # Self-referential
     referred_by: Mapped["User"] = relationship("User", remote_side=[id], back_populates="referrals_made")

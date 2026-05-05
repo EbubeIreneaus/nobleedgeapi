@@ -5,8 +5,10 @@ from decimal import Decimal
 from datetime import datetime, timezone
 from app.models.user import User
 from app.models.wallet import Wallet
+from app.models.settings import Setting
 from app.models.transaction import Transaction
 from app.schemas.transaction import TransactionCreate
+from app.schemas.wallet import WalletConnectRequest
 from app.services.wallet_service import create_deposit_request
 from app.dependencies import get_db, get_current_active_user
 from app.config import settings
@@ -43,20 +45,47 @@ async def get_wallet(current_user: User = Depends(get_current_active_user), db: 
             "total_deposited": float(wallet.total_deposited),
             "total_withdrawn": float(wallet.total_withdrawn),
             "total_earned": float(wallet.total_earned),
-            "referral_bonus": float(wallet.referral_bonus)
+            "referral_bonus": float(wallet.referral_bonus),
+            "connected_wallet": wallet.connected_wallet
         }
     }
 
 @router.get("/deposit/addresses")
-async def get_deposit_addresses():
+async def get_deposit_addresses(db: AsyncSession = Depends(get_db)):
+    async def get_val(key: str, default: str) -> str:
+        res = await db.execute(select(Setting).where(Setting.key == key))
+        s = res.scalars().first()
+        return s.value if s else default
+
     return {
         "success": True,
         "data": {
-            "BTC": settings.BTC_WALLET,
-            "USDT_TRC20": settings.USDT_TRC20_WALLET,
-            "USDT_ERC20": settings.USDT_ERC20_WALLET,
-            "ETH": settings.ETH_WALLET
+            "BTC": await get_val("btc_deposit_address", settings.BTC_WALLET),
+            "USDT_TRC20": await get_val("usdt_trc20_deposit_address", settings.USDT_TRC20_WALLET),
+            "USDT_ERC20": await get_val("usdt_erc20_deposit_address", settings.USDT_ERC20_WALLET),
+            "ETH": await get_val("eth_deposit_address", settings.ETH_WALLET),
+            "ZELLE": await get_val("zelle_deposit_address", ""),
+            "APPLE_PAY": await get_val("apple_pay_deposit_address", ""),
+            "PAYPAL": await get_val("paypal_deposit_address", ""),
+            "BANK_TRANSFER": await get_val("bank_transfer_deposit_address", "")
         }
+    }
+
+@router.post("/connect")
+async def connect_wallet(req: WalletConnectRequest, current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_db)):
+    query = await db.execute(select(Wallet).where(Wallet.user_id == current_user.id))
+    wallet = query.scalars().first()
+    
+    if not wallet:
+        raise HTTPException(status_code=404, detail="Wallet not found")
+        
+    wallet.connected_wallet = req.address
+    await db.commit()
+    
+    return {
+        "success": True,
+        "message": "Wallet connected securely",
+        "data": {"connected_wallet": wallet.connected_wallet}
     }
 
 @router.post("/deposit")

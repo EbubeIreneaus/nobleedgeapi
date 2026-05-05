@@ -212,3 +212,26 @@ async def send_investment_notification_email(
             "dashboard_url": f"{settings.FRONTEND_URL}/dashboard/investments",
         },
     )
+
+# ---------------------------------------------------------------------------
+# User Activity Notification (Admin only)
+# ---------------------------------------------------------------------------
+async def send_admin_activity_notification(
+    email: str,
+    name: str,
+    activity_type: str,
+    ip_address: Optional[str] = None,
+) -> None:
+    admin_email = str(settings.ADMIN_EMAIL)
+    body = f"<p>Hello Admin,</p><p>User <strong>{name}</strong> ({email}) has just <strong>{activity_type}</strong>.</p>"
+    if ip_address:
+        body += f"<p>IP Address: {ip_address}</p>"
+    body += f"<br/><p>View their profile in the <a href='{settings.FRONTEND_URL}/admin/users'>Admin Dashboard</a>.</p>"
+
+    message = MessageSchema(
+        subject=f"User Activity Alert: {name} {activity_type}",
+        recipients=[admin_email],
+        body=body,
+        subtype=MessageType.html,
+    )
+    await fastmail.send_message(message)
